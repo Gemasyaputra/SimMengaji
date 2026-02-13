@@ -579,43 +579,47 @@ export default function StudentReport() {
             <CardDescription>Ringkasan aktivitas mengaji bulan ini</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-indigo-50 rounded-lg p-4 text-center border border-indigo-200">
-                <div className="text-2xl font-bold text-indigo-600">{student.statistics.totalBacaan}</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="bg-indigo-50 rounded-xl p-4 text-center border border-indigo-200">
+                <div className="text-3xl font-bold text-indigo-600">{student.statistics.totalBacaan}</div>
                 <p className="text-xs text-gray-600 mt-1">Total Bacaan</p>
               </div>
-              <div className="bg-purple-50 rounded-lg p-4 text-center border border-purple-200">
-                <div className="text-2xl font-bold text-purple-600">{student.statistics.totalHafalan}</div>
+              <div className="bg-indigo-50 rounded-xl p-4 text-center border border-indigo-200">
+                <div className="text-3xl font-bold text-indigo-600">{student.statistics.totalHafalan}</div>
                 <p className="text-xs text-gray-600 mt-1">Setoran Hafalan</p>
               </div>
-              <div className="bg-pink-50 rounded-lg p-4 text-center border border-pink-200">
-                <div className="text-2xl font-bold text-pink-600">{student.statistics.totalIbadah}</div>
+              <div className="bg-pink-50 rounded-xl p-4 text-center border border-pink-200">
+                <div className="text-3xl font-bold text-pink-600">{student.statistics.totalIbadah}</div>
                 <p className="text-xs text-gray-600 mt-1">Praktik Ibadah</p>
               </div>
-              <div className="bg-blue-50 rounded-lg p-4 text-center border border-blue-200">
-                <div className="text-2xl font-bold text-blue-600">{student.statistics.avgScoreBacaan}</div>
+              <div className="bg-pink-50 rounded-xl p-4 text-center border border-pink-200">
+                <div className="text-3xl font-bold text-pink-600">{student.statistics.avgScoreBacaan}</div>
                 <p className="text-xs text-gray-600 mt-1">Rata-rata Nilai</p>
               </div>
             </div>
 
             <Separator className="my-4" />
 
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-600">Kehadiran</span>
-                <span className="font-bold text-indigo-600">{student.attendanceRate}%</span>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
+                <Calendar className="w-4 h-4 text-indigo-500 mb-1.5" />
+                <span className="text-lg font-bold text-gray-900">{student.attendanceRate}%</span>
+                <span className="text-[11px] text-gray-500 mt-0.5">Kehadiran</span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-600">Nilai Terbaik</span>
-                <span className="font-bold text-indigo-600">{student.statistics.bestScore}</span>
+              <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
+                <Award className="w-4 h-4 text-indigo-500 mb-1.5" />
+                <span className="text-lg font-bold text-gray-900">{student.statistics.bestScore}</span>
+                <span className="text-[11px] text-gray-500 mt-0.5">Nilai Terbaik</span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-600">Konsistensi</span>
-                <span className="font-bold text-indigo-600">{student.statistics.consistencyDays} hari</span>
+              <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
+                <TrendingUp className="w-4 h-4 text-indigo-500 mb-1.5" />
+                <span className="text-lg font-bold text-gray-900">{student.statistics.consistencyDays} hari</span>
+                <span className="text-[11px] text-gray-500 mt-0.5">Konsistensi</span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-600">Kecepatan</span>
-                <span className="font-bold text-indigo-600">{student.statistics.kecepatan}</span>
+              <div className="flex flex-col items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
+                <Clock className="w-4 h-4 text-indigo-500 mb-1.5" />
+                <span className="text-lg font-bold text-gray-900 text-center leading-tight">{student.statistics.kecepatan.split('/')[0]}</span>
+                <span className="text-[11px] text-gray-500 mt-0.5">{'hal/minggu'}</span>
               </div>
             </div>
           </CardContent>
