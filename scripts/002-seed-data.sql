@@ -1,208 +1,196 @@
 -- Seed data for SimMengaji app
+-- Matches schema from 001-create-tables.sql exactly
 
 -- Insert mosque
-INSERT INTO mosques (id, name, address, logo_url) VALUES
-  (1, 'Masjid Al-Ikhlas', 'Jl. Raya No. 1, Kota Bandung', NULL)
+INSERT INTO mosques (id, name, address, slug) VALUES
+  (1, 'Masjid Al-Ikhlas', 'Jl. Raya No. 1, Kota Bandung', 'masjid-al-ikhlas')
 ON CONFLICT (id) DO NOTHING;
 
--- Insert users (admin, teachers, parents)
--- Using emails that would match Google SSO
-INSERT INTO users (id, name, email, role, avatar_url, mosque_id) VALUES
-  (1, 'Ahmad Fauzi', 'admin@simmengaji.com', 'admin', NULL, 1),
-  (2, 'Ustadz Rahmat', 'ustadz.rahmat@simmengaji.com', 'teacher', NULL, 1),
-  (3, 'Ustadzah Siti', 'ustadzah.siti@simmengaji.com', 'teacher', NULL, 1),
-  (4, 'Budi Santoso', 'budi.santoso@simmengaji.com', 'parent', NULL, 1),
-  (5, 'Dewi Lestari', 'dewi.lestari@simmengaji.com', 'parent', NULL, 1)
+-- Insert users (admin & teachers)
+INSERT INTO users (id, mosque_id, full_name, email, password_hash, role, phone_number, avatar_url) VALUES
+  (1, 1, 'Ahmad Fauzi', 'admin@simmengaji.com', '', 'admin', '081234567890', NULL),
+  (2, 1, 'Ustadz Rahmat', 'ustadz.rahmat@simmengaji.com', '', 'teacher', '081234567891', NULL),
+  (3, 1, 'Ustadzah Siti', 'ustadzah.siti@simmengaji.com', '', 'teacher', '081234567892', NULL)
 ON CONFLICT (id) DO NOTHING;
 
--- Insert halaqah (study groups)
-INSERT INTO halaqah (id, name, teacher_id, mosque_id, schedule) VALUES
-  (1, 'Halaqah Al-Fatihah', 2, 1, 'Senin & Kamis, 16:00-17:30'),
-  (2, 'Halaqah An-Naba', 3, 1, 'Selasa & Jumat, 16:00-17:30'),
-  (3, 'Halaqah Al-Baqarah', 2, 1, 'Rabu & Sabtu, 08:00-09:30')
+-- Insert master surahs
+INSERT INTO master_surahs (id, surah_name, total_verses, surah_order) VALUES
+  (1, 'Al-Fatihah', 7, 1),
+  (2, 'Al-Baqarah', 286, 2),
+  (3, 'Ali Imran', 200, 3),
+  (4, 'An-Nisa', 176, 4),
+  (5, 'An-Nas', 6, 114),
+  (6, 'Al-Falaq', 5, 113),
+  (7, 'Al-Ikhlas', 4, 112),
+  (8, 'Al-Lahab', 5, 111),
+  (9, 'An-Nasr', 3, 110),
+  (10, 'Al-Kafirun', 6, 109),
+  (11, 'Al-Kautsar', 3, 108),
+  (12, 'Al-Maun', 7, 107),
+  (13, 'Quraisy', 4, 106),
+  (14, 'Al-Fil', 5, 105),
+  (15, 'Al-Humazah', 9, 104)
+ON CONFLICT (id) DO NOTHING;
+
+-- Insert master daily doas
+INSERT INTO master_daily_doas (id, title, category) VALUES
+  (1, 'Doa Sebelum Makan', 'makan'),
+  (2, 'Doa Sesudah Makan', 'makan'),
+  (3, 'Doa Sebelum Tidur', 'tidur'),
+  (4, 'Doa Bangun Tidur', 'tidur'),
+  (5, 'Doa Masuk Masjid', 'masjid'),
+  (6, 'Doa Keluar Masjid', 'masjid'),
+  (7, 'Doa Keluar Rumah', 'harian'),
+  (8, 'Doa Masuk Kamar Mandi', 'harian'),
+  (9, 'Doa Kedua Orang Tua', 'harian'),
+  (10, 'Doa Setelah Adzan', 'shalat')
+ON CONFLICT (id) DO NOTHING;
+
+-- Insert master prayer readings
+INSERT INTO master_prayer_readings (id, title, step_order) VALUES
+  (1, 'Niat Shalat', 1),
+  (2, 'Takbiratul Ihram', 2),
+  (3, 'Doa Iftitah', 3),
+  (4, 'Surah Al-Fatihah', 4),
+  (5, 'Bacaan Ruku', 5),
+  (6, 'Bacaan Iktidal', 6),
+  (7, 'Bacaan Sujud', 7),
+  (8, 'Bacaan Duduk Antara Dua Sujud', 8),
+  (9, 'Tasyahud Awal', 9),
+  (10, 'Tasyahud Akhir', 10),
+  (11, 'Salam', 11)
 ON CONFLICT (id) DO NOTHING;
 
 -- Insert students
-INSERT INTO students (id, name, parent_id, halaqah_id, mosque_id, date_of_birth, enrollment_date, status) VALUES
-  (1, 'Muhammad Rizki', 4, 1, 1, '2015-03-15', '2024-01-10', 'active'),
-  (2, 'Aisyah Putri', 4, 2, 1, '2016-07-22', '2024-01-10', 'active'),
-  (3, 'Fatimah Zahra', 5, 1, 1, '2015-11-05', '2024-02-01', 'active'),
-  (4, 'Umar Hadi', 5, 2, 1, '2014-09-18', '2024-01-15', 'active'),
-  (5, 'Khadijah Amira', 5, 3, 1, '2016-01-30', '2024-03-01', 'active'),
-  (6, 'Ali Rahman', 4, 3, 1, '2015-06-12', '2024-02-15', 'active'),
-  (7, 'Zainab Husna', 4, 1, 1, '2017-04-08', '2024-04-01', 'active'),
-  (8, 'Hasan Basri', 5, 2, 1, '2016-12-25', '2024-01-20', 'active')
+INSERT INTO students (id, mosque_id, assigned_teacher_id, full_name, parent_phone, student_slug, current_jilid, current_page) VALUES
+  (1, 1, 2, 'Muhammad Rizki', '081300000001', 'muhammad-rizki-1', '3', 45),
+  (2, 1, 3, 'Aisyah Putri', '081300000002', 'aisyah-putri-2', '2', 30),
+  (3, 1, 2, 'Fatimah Zahra', '081300000003', 'fatimah-zahra-3', '3', 20),
+  (4, 1, 3, 'Umar Hadi', '081300000004', 'umar-hadi-4', '4', 10),
+  (5, 1, 2, 'Khadijah Amira', '081300000005', 'khadijah-amira-5', '1', 15),
+  (6, 1, 2, 'Ali Rahman', '081300000006', 'ali-rahman-6', '2', 25),
+  (7, 1, 2, 'Zainab Husna', '081300000007', 'zainab-husna-7', '1', 8),
+  (8, 1, 3, 'Hasan Basri', '081300000008', 'hasan-basri-8', '2', 18)
 ON CONFLICT (id) DO NOTHING;
 
--- Insert bacaan_records (Quran reading records)
-INSERT INTO bacaan_records (student_id, teacher_id, surah_name, ayat_from, ayat_to, score, notes, record_date) VALUES
-  -- Muhammad Rizki records
-  (1, 2, 'Al-Fatihah', 1, 7, 'A', 'Bacaan lancar, tajwid baik', '2025-01-15'),
-  (1, 2, 'Al-Baqarah', 1, 5, 'A-', 'Perlu perbaikan mad', '2025-01-20'),
-  (1, 2, 'Al-Baqarah', 6, 10, 'B+', 'Tajwid cukup baik', '2025-01-27'),
-  (1, 2, 'Al-Baqarah', 11, 20, 'A', 'Sangat baik', '2025-02-03'),
-  (1, 2, 'Al-Baqarah', 21, 25, 'A-', 'Lancar', '2025-02-10'),
-  (1, 2, 'Ali Imran', 1, 10, 'B+', 'Perlu latihan lagi', '2025-02-17'),
-  (1, 2, 'Ali Imran', 11, 20, 'A', 'Excellent', '2025-02-24'),
-  (1, 2, 'An-Nisa', 1, 5, 'A', 'Bacaan sangat baik', '2025-03-03'),
-  -- Aisyah Putri records
-  (2, 3, 'Al-Fatihah', 1, 7, 'A', 'Sangat lancar', '2025-01-14'),
-  (2, 3, 'An-Nas', 1, 6, 'A', 'Hafalan sempurna', '2025-01-21'),
-  (2, 3, 'Al-Falaq', 1, 5, 'A-', 'Baik', '2025-01-28'),
-  (2, 3, 'Al-Ikhlas', 1, 4, 'A', 'Sempurna', '2025-02-04'),
-  (2, 3, 'Al-Lahab', 1, 5, 'B+', 'Cukup baik', '2025-02-11'),
-  (2, 3, 'An-Nasr', 1, 3, 'A', 'Lancar', '2025-02-18'),
-  -- Fatimah Zahra records
-  (3, 2, 'Al-Fatihah', 1, 7, 'A', 'Sangat baik', '2025-01-16'),
-  (3, 2, 'Al-Baqarah', 1, 10, 'B+', 'Perlu latihan tajwid', '2025-01-23'),
-  (3, 2, 'Al-Baqarah', 11, 20, 'A-', 'Meningkat', '2025-02-06'),
-  (3, 2, 'Al-Baqarah', 21, 30, 'A', 'Sangat baik', '2025-02-13'),
-  -- Umar Hadi records
-  (4, 3, 'Al-Fatihah', 1, 7, 'A', 'Lancar', '2025-01-15'),
-  (4, 3, 'Al-Baqarah', 1, 15, 'A-', 'Baik', '2025-01-22'),
-  (4, 3, 'Al-Baqarah', 16, 30, 'B+', 'Cukup', '2025-02-05'),
-  (4, 3, 'Ali Imran', 1, 10, 'A', 'Meningkat pesat', '2025-02-19'),
-  (4, 3, 'Ali Imran', 11, 25, 'A', 'Excellent', '2025-03-05'),
-  -- Khadijah Amira records
-  (5, 2, 'Al-Fatihah', 1, 7, 'A', 'Bagus', '2025-03-05'),
-  (5, 2, 'An-Nas', 1, 6, 'B+', 'Cukup baik', '2025-03-12'),
-  -- Ali Rahman records
-  (6, 2, 'Al-Fatihah', 1, 7, 'A-', 'Baik', '2025-02-20'),
-  (6, 2, 'Al-Baqarah', 1, 5, 'B+', 'Perlu latihan', '2025-02-27'),
-  (6, 2, 'Al-Baqarah', 6, 15, 'A', 'Meningkat', '2025-03-06'),
-  -- Zainab Husna records
-  (7, 2, 'Al-Fatihah', 1, 7, 'A', 'Sangat lancar', '2025-04-05'),
-  (7, 2, 'An-Nas', 1, 6, 'A', 'Bagus', '2025-04-12'),
-  -- Hasan Basri records
-  (8, 3, 'Al-Fatihah', 1, 7, 'B+', 'Cukup', '2025-01-22'),
-  (8, 3, 'An-Nas', 1, 6, 'A-', 'Meningkat', '2025-02-05'),
-  (8, 3, 'Al-Falaq', 1, 5, 'A', 'Bagus', '2025-02-19');
+-- Insert reading_logs (Iqro / Al-Quran reading records)
+INSERT INTO reading_logs (mosque_id, student_id, teacher_id, date, material_type, volume_info, start_point, end_point, quality_score, notes) VALUES
+  -- Muhammad Rizki (student 1, teacher 2)
+  (1, 1, 2, '2025-01-15', 'iqro', 'Jilid 3', '1', '5', 'A', 'Bacaan lancar, tajwid baik'),
+  (1, 1, 2, '2025-01-20', 'iqro', 'Jilid 3', '6', '10', 'A-', 'Perlu perbaikan mad'),
+  (1, 1, 2, '2025-01-27', 'iqro', 'Jilid 3', '11', '15', 'B+', 'Tajwid cukup baik'),
+  (1, 1, 2, '2025-02-03', 'iqro', 'Jilid 3', '16', '20', 'A', 'Sangat baik'),
+  (1, 1, 2, '2025-02-10', 'iqro', 'Jilid 3', '21', '25', 'A-', 'Lancar'),
+  (1, 1, 2, '2025-02-17', 'iqro', 'Jilid 3', '26', '30', 'B+', 'Perlu latihan lagi'),
+  (1, 1, 2, '2025-02-24', 'iqro', 'Jilid 3', '31', '35', 'A', 'Excellent'),
+  (1, 1, 2, '2025-03-03', 'quran', 'Al-Fatihah', '1', '7', 'A', 'Bacaan sangat baik'),
+  -- Aisyah Putri (student 2, teacher 3)
+  (1, 2, 3, '2025-01-14', 'iqro', 'Jilid 2', '1', '5', 'A', 'Sangat lancar'),
+  (1, 2, 3, '2025-01-21', 'iqro', 'Jilid 2', '6', '10', 'A', 'Hafalan sempurna'),
+  (1, 2, 3, '2025-01-28', 'iqro', 'Jilid 2', '11', '15', 'A-', 'Baik'),
+  (1, 2, 3, '2025-02-04', 'iqro', 'Jilid 2', '16', '20', 'A', 'Sempurna'),
+  (1, 2, 3, '2025-02-11', 'iqro', 'Jilid 2', '21', '25', 'B+', 'Cukup baik'),
+  (1, 2, 3, '2025-02-18', 'iqro', 'Jilid 2', '26', '30', 'A', 'Lancar'),
+  -- Fatimah Zahra (student 3, teacher 2)
+  (1, 3, 2, '2025-01-16', 'iqro', 'Jilid 3', '1', '5', 'A', 'Sangat baik'),
+  (1, 3, 2, '2025-01-23', 'iqro', 'Jilid 3', '6', '10', 'B+', 'Perlu latihan tajwid'),
+  (1, 3, 2, '2025-02-06', 'iqro', 'Jilid 3', '11', '15', 'A-', 'Meningkat'),
+  (1, 3, 2, '2025-02-13', 'iqro', 'Jilid 3', '16', '20', 'A', 'Sangat baik'),
+  -- Umar Hadi (student 4, teacher 3)
+  (1, 4, 3, '2025-01-15', 'quran', 'Al-Fatihah', '1', '7', 'A', 'Lancar'),
+  (1, 4, 3, '2025-01-22', 'quran', 'Al-Baqarah', '1', '5', 'A-', 'Baik'),
+  (1, 4, 3, '2025-02-05', 'quran', 'Al-Baqarah', '6', '10', 'B+', 'Cukup'),
+  (1, 4, 3, '2025-02-19', 'quran', 'Ali Imran', '1', '5', 'A', 'Meningkat pesat'),
+  (1, 4, 3, '2025-03-05', 'quran', 'Ali Imran', '6', '10', 'A', 'Excellent'),
+  -- Khadijah, Ali, Zainab, Hasan
+  (1, 5, 2, '2025-03-05', 'iqro', 'Jilid 1', '1', '5', 'A', 'Bagus'),
+  (1, 5, 2, '2025-03-12', 'iqro', 'Jilid 1', '6', '10', 'B+', 'Cukup baik'),
+  (1, 6, 2, '2025-02-20', 'iqro', 'Jilid 2', '1', '5', 'A-', 'Baik'),
+  (1, 6, 2, '2025-02-27', 'iqro', 'Jilid 2', '6', '10', 'B+', 'Perlu latihan'),
+  (1, 6, 2, '2025-03-06', 'iqro', 'Jilid 2', '11', '15', 'A', 'Meningkat'),
+  (1, 7, 2, '2025-04-05', 'iqro', 'Jilid 1', '1', '3', 'A', 'Sangat lancar'),
+  (1, 7, 2, '2025-04-12', 'iqro', 'Jilid 1', '4', '8', 'A', 'Bagus'),
+  (1, 8, 3, '2025-01-22', 'iqro', 'Jilid 2', '1', '5', 'B+', 'Cukup'),
+  (1, 8, 3, '2025-02-05', 'iqro', 'Jilid 2', '6', '10', 'A-', 'Meningkat'),
+  (1, 8, 3, '2025-02-19', 'iqro', 'Jilid 2', '11', '18', 'A', 'Bagus');
 
--- Insert hafalan_records (memorization records)
-INSERT INTO hafalan_records (student_id, teacher_id, surah_name, ayat_from, ayat_to, status, score, notes, record_date) VALUES
-  (1, 2, 'Al-Fatihah', 1, 7, 'memorized', 'A', 'Hafal sempurna', '2025-01-20'),
-  (1, 2, 'An-Nas', 1, 6, 'memorized', 'A', 'Lancar', '2025-02-03'),
-  (1, 2, 'Al-Falaq', 1, 5, 'memorized', 'A-', 'Baik', '2025-02-17'),
-  (1, 2, 'Al-Ikhlas', 1, 4, 'memorized', 'A', 'Sempurna', '2025-03-03'),
-  (1, 2, 'Al-Lahab', 1, 5, 'in_progress', 'B+', 'Sedang proses', '2025-03-10'),
-  (2, 3, 'Al-Fatihah', 1, 7, 'memorized', 'A', 'Hafal sempurna', '2025-01-21'),
-  (2, 3, 'An-Nas', 1, 6, 'memorized', 'A', 'Sangat baik', '2025-02-04'),
-  (2, 3, 'Al-Falaq', 1, 5, 'memorized', 'A', 'Sempurna', '2025-02-18'),
-  (2, 3, 'Al-Ikhlas', 1, 4, 'memorized', 'A', 'Lancar', '2025-03-04'),
-  (2, 3, 'Al-Lahab', 1, 5, 'memorized', 'A-', 'Baik', '2025-03-18'),
-  (2, 3, 'An-Nasr', 1, 3, 'memorized', 'A', 'Excellent', '2025-04-01'),
-  (3, 2, 'Al-Fatihah', 1, 7, 'memorized', 'A', 'Hafal', '2025-01-23'),
-  (3, 2, 'An-Nas', 1, 6, 'memorized', 'A-', 'Baik', '2025-02-13'),
-  (3, 2, 'Al-Falaq', 1, 5, 'in_progress', 'B+', 'Proses', '2025-03-06'),
-  (4, 3, 'Al-Fatihah', 1, 7, 'memorized', 'A', 'Lancar', '2025-01-22'),
-  (4, 3, 'An-Nas', 1, 6, 'memorized', 'A', 'Baik', '2025-02-05'),
-  (4, 3, 'Al-Falaq', 1, 5, 'memorized', 'A-', 'Cukup', '2025-02-19'),
-  (4, 3, 'Al-Ikhlas', 1, 4, 'memorized', 'A', 'Sempurna', '2025-03-05'),
-  (5, 2, 'Al-Fatihah', 1, 7, 'memorized', 'A', 'Bagus', '2025-03-12'),
-  (6, 2, 'Al-Fatihah', 1, 7, 'memorized', 'A-', 'Hafal', '2025-02-27'),
-  (6, 2, 'An-Nas', 1, 6, 'in_progress', 'B+', 'Proses', '2025-03-13'),
-  (7, 2, 'Al-Fatihah', 1, 7, 'memorized', 'A', 'Lancar', '2025-04-12'),
-  (8, 3, 'Al-Fatihah', 1, 7, 'memorized', 'B+', 'Cukup baik', '2025-02-05'),
-  (8, 3, 'An-Nas', 1, 6, 'memorized', 'A-', 'Meningkat', '2025-02-26');
-
--- Insert ibadah_records (worship practice records)
-INSERT INTO ibadah_records (student_id, teacher_id, ibadah_type, detail, score, notes, record_date) VALUES
-  (1, 2, 'shalat', 'Shalat Dzuhur - Gerakan dan bacaan', 'A', 'Gerakan sempurna', '2025-01-18'),
-  (1, 2, 'shalat', 'Shalat Ashar - Praktik lengkap', 'A', 'Sangat baik', '2025-02-01'),
-  (1, 2, 'wudhu', 'Praktik wudhu lengkap', 'A-', 'Urutan benar', '2025-02-15'),
-  (1, 2, 'doa', 'Doa sebelum makan', 'A', 'Hafal lancar', '2025-03-01'),
-  (1, 2, 'adzan', 'Praktik adzan', 'B+', 'Cukup baik', '2025-03-08'),
-  (2, 3, 'shalat', 'Shalat Maghrib - Praktik', 'A', 'Gerakan benar', '2025-01-20'),
-  (2, 3, 'wudhu', 'Wudhu lengkap', 'A', 'Sempurna', '2025-02-03'),
-  (2, 3, 'doa', 'Doa sebelum tidur', 'A', 'Hafal', '2025-02-17'),
-  (2, 3, 'doa', 'Doa masuk masjid', 'A-', 'Baik', '2025-03-03'),
-  (3, 2, 'shalat', 'Shalat Subuh', 'A-', 'Baik', '2025-01-25'),
-  (3, 2, 'wudhu', 'Praktik wudhu', 'A', 'Benar', '2025-02-08'),
-  (3, 2, 'doa', 'Doa keluar rumah', 'B+', 'Cukup', '2025-02-22'),
-  (4, 3, 'shalat', 'Shalat Isya', 'A', 'Sempurna', '2025-01-28'),
-  (4, 3, 'wudhu', 'Wudhu', 'A', 'Baik', '2025-02-11'),
-  (4, 3, 'doa', 'Doa setelah shalat', 'A', 'Lancar', '2025-02-25'),
-  (4, 3, 'shalat', 'Shalat Dhuha', 'A-', 'Baik', '2025-03-11'),
-  (5, 2, 'shalat', 'Shalat Dzuhur', 'A', 'Bagus', '2025-03-15'),
-  (5, 2, 'wudhu', 'Wudhu', 'B+', 'Cukup', '2025-03-22'),
-  (6, 2, 'shalat', 'Shalat Ashar', 'A-', 'Baik', '2025-03-01'),
-  (6, 2, 'doa', 'Doa makan', 'A', 'Lancar', '2025-03-08'),
-  (7, 2, 'shalat', 'Shalat Maghrib', 'A', 'Sempurna', '2025-04-10'),
-  (8, 3, 'shalat', 'Shalat Subuh', 'B+', 'Cukup', '2025-02-08'),
-  (8, 3, 'wudhu', 'Wudhu', 'A-', 'Baik', '2025-02-22');
-
--- Insert attendance_records
-INSERT INTO attendance_records (student_id, halaqah_id, attendance_date, status, notes) VALUES
-  -- Muhammad Rizki - mostly present
-  (1, 1, '2025-01-13', 'present', NULL), (1, 1, '2025-01-16', 'present', NULL),
-  (1, 1, '2025-01-20', 'present', NULL), (1, 1, '2025-01-23', 'present', NULL),
-  (1, 1, '2025-01-27', 'present', NULL), (1, 1, '2025-01-30', 'present', NULL),
-  (1, 1, '2025-02-03', 'present', NULL), (1, 1, '2025-02-06', 'absent', 'Sakit'),
-  (1, 1, '2025-02-10', 'present', NULL), (1, 1, '2025-02-13', 'present', NULL),
-  (1, 1, '2025-02-17', 'present', NULL), (1, 1, '2025-02-20', 'present', NULL),
-  (1, 1, '2025-02-24', 'present', NULL), (1, 1, '2025-02-27', 'present', NULL),
-  (1, 1, '2025-03-03', 'present', NULL), (1, 1, '2025-03-06', 'late', 'Terlambat 10 menit'),
+-- Insert memorization_logs (Tahfidz)
+INSERT INTO memorization_logs (mosque_id, student_id, teacher_id, surah_id, verse_start, verse_end, memorization_type, fluency_level, notes, date) VALUES
+  -- Muhammad Rizki
+  (1, 1, 2, 1, 1, 7, 'setoran_baru', 'lancar', 'Hafal sempurna', '2025-01-20'),
+  (1, 1, 2, 5, 1, 6, 'setoran_baru', 'lancar', 'Lancar', '2025-02-03'),
+  (1, 1, 2, 6, 1, 5, 'setoran_baru', 'cukup_lancar', 'Baik', '2025-02-17'),
+  (1, 1, 2, 7, 1, 4, 'setoran_baru', 'lancar', 'Sempurna', '2025-03-03'),
+  (1, 1, 2, 8, 1, 5, 'muroja_ah', 'kurang_lancar', 'Sedang proses', '2025-03-10'),
   -- Aisyah Putri
-  (2, 2, '2025-01-14', 'present', NULL), (2, 2, '2025-01-17', 'present', NULL),
-  (2, 2, '2025-01-21', 'present', NULL), (2, 2, '2025-01-24', 'present', NULL),
-  (2, 2, '2025-01-28', 'present', NULL), (2, 2, '2025-01-31', 'present', NULL),
-  (2, 2, '2025-02-04', 'present', NULL), (2, 2, '2025-02-07', 'present', NULL),
-  (2, 2, '2025-02-11', 'absent', 'Izin keluarga'), (2, 2, '2025-02-14', 'present', NULL),
-  (2, 2, '2025-02-18', 'present', NULL), (2, 2, '2025-02-21', 'present', NULL),
-  (2, 2, '2025-02-25', 'present', NULL), (2, 2, '2025-02-28', 'present', NULL),
+  (1, 2, 3, 1, 1, 7, 'setoran_baru', 'lancar', 'Hafal sempurna', '2025-01-21'),
+  (1, 2, 3, 5, 1, 6, 'setoran_baru', 'lancar', 'Sangat baik', '2025-02-04'),
+  (1, 2, 3, 6, 1, 5, 'setoran_baru', 'lancar', 'Sempurna', '2025-02-18'),
+  (1, 2, 3, 7, 1, 4, 'setoran_baru', 'lancar', 'Lancar', '2025-03-04'),
+  (1, 2, 3, 8, 1, 5, 'setoran_baru', 'cukup_lancar', 'Baik', '2025-03-18'),
+  (1, 2, 3, 9, 1, 3, 'setoran_baru', 'lancar', 'Excellent', '2025-04-01'),
   -- Fatimah Zahra
-  (3, 1, '2025-01-13', 'present', NULL), (3, 1, '2025-01-16', 'present', NULL),
-  (3, 1, '2025-01-20', 'present', NULL), (3, 1, '2025-01-23', 'absent', 'Sakit'),
-  (3, 1, '2025-01-27', 'present', NULL), (3, 1, '2025-01-30', 'present', NULL),
-  (3, 1, '2025-02-03', 'present', NULL), (3, 1, '2025-02-06', 'present', NULL),
-  (3, 1, '2025-02-10', 'present', NULL), (3, 1, '2025-02-13', 'present', NULL),
+  (1, 3, 2, 1, 1, 7, 'setoran_baru', 'lancar', 'Hafal', '2025-01-23'),
+  (1, 3, 2, 5, 1, 6, 'setoran_baru', 'cukup_lancar', 'Baik', '2025-02-13'),
+  (1, 3, 2, 6, 1, 5, 'muroja_ah', 'kurang_lancar', 'Proses', '2025-03-06'),
   -- Umar Hadi
-  (4, 2, '2025-01-14', 'present', NULL), (4, 2, '2025-01-17', 'present', NULL),
-  (4, 2, '2025-01-21', 'present', NULL), (4, 2, '2025-01-24', 'present', NULL),
-  (4, 2, '2025-01-28', 'present', NULL), (4, 2, '2025-01-31', 'late', 'Terlambat'),
-  (4, 2, '2025-02-04', 'present', NULL), (4, 2, '2025-02-07', 'present', NULL),
-  (4, 2, '2025-02-11', 'present', NULL), (4, 2, '2025-02-14', 'present', NULL),
-  (4, 2, '2025-02-18', 'present', NULL), (4, 2, '2025-02-21', 'present', NULL),
-  (4, 2, '2025-02-25', 'present', NULL), (4, 2, '2025-02-28', 'absent', 'Izin'),
-  -- Others - smaller attendance sets
-  (5, 3, '2025-03-05', 'present', NULL), (5, 3, '2025-03-08', 'present', NULL),
-  (5, 3, '2025-03-12', 'present', NULL), (5, 3, '2025-03-15', 'present', NULL),
-  (5, 3, '2025-03-19', 'present', NULL), (5, 3, '2025-03-22', 'absent', 'Sakit'),
-  (6, 3, '2025-02-19', 'present', NULL), (6, 3, '2025-02-22', 'present', NULL),
-  (6, 3, '2025-02-26', 'present', NULL), (6, 3, '2025-03-01', 'present', NULL),
-  (6, 3, '2025-03-05', 'present', NULL), (6, 3, '2025-03-08', 'present', NULL),
-  (7, 1, '2025-04-03', 'present', NULL), (7, 1, '2025-04-07', 'present', NULL),
-  (7, 1, '2025-04-10', 'present', NULL), (7, 1, '2025-04-14', 'present', NULL),
-  (8, 2, '2025-01-21', 'present', NULL), (8, 2, '2025-01-24', 'present', NULL),
-  (8, 2, '2025-01-28', 'present', NULL), (8, 2, '2025-01-31', 'present', NULL),
-  (8, 2, '2025-02-04', 'absent', 'Sakit'), (8, 2, '2025-02-07', 'present', NULL),
-  (8, 2, '2025-02-11', 'present', NULL), (8, 2, '2025-02-14', 'present', NULL);
+  (1, 4, 3, 1, 1, 7, 'setoran_baru', 'lancar', 'Lancar', '2025-01-22'),
+  (1, 4, 3, 5, 1, 6, 'setoran_baru', 'lancar', 'Baik', '2025-02-05'),
+  (1, 4, 3, 6, 1, 5, 'setoran_baru', 'cukup_lancar', 'Cukup', '2025-02-19'),
+  (1, 4, 3, 7, 1, 4, 'setoran_baru', 'lancar', 'Sempurna', '2025-03-05'),
+  -- Others
+  (1, 5, 2, 1, 1, 7, 'setoran_baru', 'lancar', 'Bagus', '2025-03-12'),
+  (1, 6, 2, 1, 1, 7, 'setoran_baru', 'cukup_lancar', 'Hafal', '2025-02-27'),
+  (1, 6, 2, 5, 1, 6, 'muroja_ah', 'kurang_lancar', 'Proses', '2025-03-13'),
+  (1, 7, 2, 1, 1, 7, 'setoran_baru', 'lancar', 'Lancar', '2025-04-12'),
+  (1, 8, 3, 1, 1, 7, 'setoran_baru', 'cukup_lancar', 'Cukup baik', '2025-02-05'),
+  (1, 8, 3, 5, 1, 6, 'setoran_baru', 'cukup_lancar', 'Meningkat', '2025-02-26');
 
--- Insert achievements
-INSERT INTO achievements (student_id, title, description, badge_type, awarded_date) VALUES
-  (1, 'Khatam Juz 30', 'Menyelesaikan bacaan seluruh Juz 30', 'gold', '2025-02-28'),
-  (1, 'Rajin Mengaji', 'Hadir 15 kali berturut-turut tanpa absen', 'silver', '2025-02-20'),
-  (1, 'Hafiz Cilik', 'Menghafal 4 surah pendek dengan lancar', 'gold', '2025-03-03'),
-  (2, 'Bintang Hafalan', 'Menghafal 6 surah pendek dengan sempurna', 'gold', '2025-04-01'),
-  (2, 'Rajin Mengaji', 'Hadir 14 kali berturut-turut', 'silver', '2025-02-25'),
-  (2, 'Teladan Ibadah', 'Praktik ibadah selalu mendapat nilai A', 'bronze', '2025-03-03'),
-  (3, 'Peningkatan Terbaik', 'Nilai meningkat konsisten selama 3 bulan', 'silver', '2025-02-13'),
-  (4, 'Rajin Mengaji', 'Kehadiran konsisten', 'silver', '2025-02-25'),
-  (4, 'Hafiz Cilik', 'Menghafal 4 surah pendek', 'gold', '2025-03-05'),
-  (6, 'Peningkatan Terbaik', 'Nilai bacaan meningkat pesat', 'bronze', '2025-03-06');
+-- Insert worship_assessments (Ibadah practice)
+INSERT INTO worship_assessments (mosque_id, student_id, teacher_id, assessment_category, target_doa_id, target_prayer_id, status, score, notes, assessed_at) VALUES
+  -- Muhammad Rizki
+  (1, 1, 2, 'bacaan_shalat', NULL, 1, 'kompeten', 90, 'Gerakan sempurna', '2025-01-18'),
+  (1, 1, 2, 'bacaan_shalat', NULL, 5, 'kompeten', 85, 'Sangat baik', '2025-02-01'),
+  (1, 1, 2, 'bacaan_shalat', NULL, 7, 'kompeten', 80, 'Urutan benar', '2025-02-15'),
+  (1, 1, 2, 'doa_harian', 1, NULL, 'kompeten', 95, 'Hafal lancar', '2025-03-01'),
+  (1, 1, 2, 'doa_harian', 3, NULL, 'belum_kompeten', 70, 'Cukup baik', '2025-03-08'),
+  -- Aisyah Putri
+  (1, 2, 3, 'bacaan_shalat', NULL, 4, 'kompeten', 90, 'Gerakan benar', '2025-01-20'),
+  (1, 2, 3, 'bacaan_shalat', NULL, 7, 'kompeten', 95, 'Sempurna', '2025-02-03'),
+  (1, 2, 3, 'doa_harian', 3, NULL, 'kompeten', 90, 'Hafal', '2025-02-17'),
+  (1, 2, 3, 'doa_harian', 5, NULL, 'kompeten', 85, 'Baik', '2025-03-03'),
+  -- Fatimah Zahra
+  (1, 3, 2, 'bacaan_shalat', NULL, 2, 'kompeten', 80, 'Baik', '2025-01-25'),
+  (1, 3, 2, 'bacaan_shalat', NULL, 5, 'kompeten', 90, 'Benar', '2025-02-08'),
+  (1, 3, 2, 'doa_harian', 7, NULL, 'belum_kompeten', 70, 'Cukup', '2025-02-22'),
+  -- Umar Hadi
+  (1, 4, 3, 'bacaan_shalat', NULL, 10, 'kompeten', 95, 'Sempurna', '2025-01-28'),
+  (1, 4, 3, 'bacaan_shalat', NULL, 5, 'kompeten', 90, 'Baik', '2025-02-11'),
+  (1, 4, 3, 'doa_harian', 10, NULL, 'kompeten', 85, 'Lancar', '2025-02-25'),
+  (1, 4, 3, 'bacaan_shalat', NULL, 3, 'kompeten', 80, 'Baik', '2025-03-11'),
+  -- Others
+  (1, 5, 2, 'bacaan_shalat', NULL, 4, 'kompeten', 90, 'Bagus', '2025-03-15'),
+  (1, 5, 2, 'bacaan_shalat', NULL, 7, 'belum_kompeten', 65, 'Cukup', '2025-03-22'),
+  (1, 6, 2, 'bacaan_shalat', NULL, 2, 'kompeten', 80, 'Baik', '2025-03-01'),
+  (1, 6, 2, 'doa_harian', 1, NULL, 'kompeten', 90, 'Lancar', '2025-03-08'),
+  (1, 7, 2, 'bacaan_shalat', NULL, 4, 'kompeten', 95, 'Sempurna', '2025-04-10'),
+  (1, 8, 3, 'bacaan_shalat', NULL, 2, 'belum_kompeten', 70, 'Cukup', '2025-02-08'),
+  (1, 8, 3, 'bacaan_shalat', NULL, 5, 'kompeten', 80, 'Baik', '2025-02-22');
 
 -- Insert documentations
-INSERT INTO documentations (title, description, image_url, event_date, mosque_id, created_by) VALUES
-  ('Wisuda Tahfidz Semester 1', 'Acara wisuda tahfidz untuk santri yang telah menyelesaikan target hafalan semester pertama.', '/images/wisuda.jpg', '2025-02-15', 1, 1),
-  ('Lomba Tartil Quran', 'Perlombaan tartil Al-Quran antar halaqah dalam rangka memperingati Nuzulul Quran.', '/images/lomba.jpg', '2025-03-17', 1, 1),
-  ('Kunjungan Orang Tua', 'Acara pertemuan orang tua santri untuk membahas perkembangan belajar anak.', '/images/kunjungan.jpg', '2025-01-25', 1, 1),
-  ('Peringatan Isra Miraj', 'Peringatan Isra Miraj 1446 H dengan ceramah dan penampilan santri.', '/images/isra-miraj.jpg', '2025-01-27', 1, 1),
-  ('Buka Puasa Bersama', 'Acara buka puasa bersama seluruh santri, pengajar, dan orang tua.', '/images/bukber.jpg', '2025-03-15', 1, 1);
+INSERT INTO documentations (id, mosque_id, title, description, slug, photo_urls) VALUES
+  (1, 1, 'Wisuda Tahfidz Semester 1', 'Acara wisuda tahfidz untuk santri yang telah menyelesaikan target hafalan semester pertama. Dihadiri oleh orang tua dan para pengajar.', 'wisuda-tahfidz-semester-1', ARRAY['/images/wisuda-1.jpg', '/images/wisuda-2.jpg']),
+  (2, 1, 'Lomba Tartil Quran', 'Perlombaan tartil Al-Quran antar kelompok dalam rangka memperingati Nuzulul Quran.', 'lomba-tartil-quran', ARRAY['/images/lomba-1.jpg']),
+  (3, 1, 'Kunjungan Orang Tua', 'Acara pertemuan orang tua santri untuk membahas perkembangan belajar anak.', 'kunjungan-orang-tua', ARRAY['/images/kunjungan-1.jpg']),
+  (4, 1, 'Peringatan Isra Miraj', 'Peringatan Isra Miraj 1446 H dengan ceramah dan penampilan santri.', 'peringatan-isra-miraj', ARRAY['/images/isra-miraj-1.jpg']),
+  (5, 1, 'Buka Puasa Bersama', 'Acara buka puasa bersama seluruh santri, pengajar, dan orang tua.', 'buka-puasa-bersama', ARRAY['/images/bukber-1.jpg'])
+ON CONFLICT (id) DO NOTHING;
 
 -- Reset sequences
 SELECT setval('mosques_id_seq', (SELECT MAX(id) FROM mosques));
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
-SELECT setval('halaqah_id_seq', (SELECT MAX(id) FROM halaqah));
 SELECT setval('students_id_seq', (SELECT MAX(id) FROM students));
-SELECT setval('achievements_id_seq', (SELECT MAX(id) FROM achievements));
+SELECT setval('master_surahs_id_seq', (SELECT MAX(id) FROM master_surahs));
+SELECT setval('master_daily_doas_id_seq', (SELECT MAX(id) FROM master_daily_doas));
+SELECT setval('master_prayer_readings_id_seq', (SELECT MAX(id) FROM master_prayer_readings));
 SELECT setval('documentations_id_seq', (SELECT MAX(id) FROM documentations));
